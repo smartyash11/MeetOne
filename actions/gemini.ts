@@ -5,6 +5,11 @@ const {
 } = require("@google/generative-ai");
 
 const apiKey = process.env.GEMINI_API_KEY;
+
+if (!apiKey) {
+  throw new Error("GEMINI_API_KEY is not set in environment variables");
+}
+
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
@@ -26,14 +31,19 @@ export async function generateQuestions(resumeText: string) {
       {
         role: "user",
         parts: [
-          {text: "I WILL GIVE YOU A PIECE OF TEXT EXTRACTED FROM A RESUME. I WANT YOU TO MAKE SOME INTERVIEW QUESTIONS on it for the job position web developer." },
+          {
+            text: "I will give you a piece of text extracted from a resume. I want you to generate interview questions from it for the job position of web developer.",
+          },
         ],
       },
       {
         role: "model",
         parts: [
-          {text: "Please provide the text extracted from the resume. I need the content to tailor effective interview questions for a web developer position.  I'll be looking for specific skills, projects, and experiences mentioned to create relevant and insightful questions.
-"},
+          {
+            text: `Please provide the text extracted from the resume.
+I need the content to tailor effective interview questions for a web developer position.
+I'll be looking for specific skills, projects, and experiences mentioned to create relevant and insightful questions.`,
+          },
         ],
       },
     ],
